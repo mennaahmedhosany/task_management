@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -30,40 +31,45 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
+        // Create an access token for the user
         $accessToken = $user->createToken('authToken')->plainTextToken;
 
         // Return a response
         return response()->json(['message' => 'User registered successfully', 'user' => $user, "token" => $accessToken], 201);
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        if (Auth::attempt(['name' => request('name'), 'password' => request('password')])) {
+
+        $credentials = $request->only('name', 'password');
+
+        if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $user_token['token'] =  $user->createToken('token')->plainTextToken;
+            $token = $user->createToken('auth_token')->plainTextToken;
+
             return response()->json([
                 'success' => true,
-                'token' => $user_token,
-                'message' => "Login Successful",
-                'user' => $user
-
-
+                'message' => 'Login successful',
+                'token' => $token,
+                'user' => $user,
             ], 200);
-        } else {
-            return response()->json([
-                'error' => 'Unauthorised'
-            ], 401);
         }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Unauthorized',
+        ], 401);
     }
+
 
     public function logout(Request $request)
     {
-        if (Auth::user()) {
-            $request->user()->token()->revoke();
-            return response()->json([
-                'success' => true,
-                'message' => 'Logged out',
-            ], 200);
-        }
+        // Delete the current token
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Logged out successfully',
+        ]);
     }
 }

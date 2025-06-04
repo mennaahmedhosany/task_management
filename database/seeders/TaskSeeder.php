@@ -14,11 +14,32 @@ class TaskSeeder extends Seeder
      */
     public function run(): void
     {
-        Task::factory()->create([
-            'title' => 'Complete project proposal',
-            'description' => 'Draft and finalize the project proposal document for the new client.',
-            'due_date' => '2025-06-10',
-            'status' => 'pending',
-        ]);
+        $customTasks = [
+            [
+                'title' => 'Complete project proposal',
+                'description' => 'Draft and finalize the project proposal document for the new client.',
+                'due_date' => '2025-06-10',
+                'status' => 'pending',
+                'priority' => 'High',
+            ],
+            [
+                'title' => 'Review design mockups',
+                'description' => 'Check the UI/UX team’s wireframes and provide feedback.',
+                'due_date' => '2025-06-12',
+                'status' => 'inprogress',
+                'priority' => 'Medium',
+            ],
+            [
+                'title' => 'Team meeting',
+                'description' => null, // testing nullable description
+                'due_date' => '2025-06-15',
+                'status' => 'completed',
+                'priority' => 'Low',
+            ],
+        ];
+
+        foreach ($customTasks as $taskData) {
+            Task::factory()->create($taskData);
+        }
     }
 }

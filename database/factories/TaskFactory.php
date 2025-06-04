@@ -21,13 +21,16 @@ class TaskFactory extends Factory
     public function definition(): array
     {
         $statuses = ['pending', 'inprogress', 'completed', 'overdue'];
+        $priorities = ['Low', 'Medium', 'High'];
 
         return [
             'title' => $this->faker->sentence(4),
-            'description' => $this->faker->paragraph(),
+            'description' => $this->faker->optional()->text(255),
             'due_date' => $this->faker->dateTimeBetween('now', '+1 month')->format('Y-m-d'),
             'status' => Arr::random($statuses),
             'priority' => $this->faker->numberBetween(0, 5),
+            'priority' => $this->faker->randomElement($priorities),
+
         ];
     }
 }

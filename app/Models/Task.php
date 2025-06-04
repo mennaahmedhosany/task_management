@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
+use App\TaskPriority;
 use App\TaskStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Testing\Fluent\Concerns\Has;
-use App\Enums\TaskPriority;
 
 
 class Task extends Model

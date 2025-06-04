@@ -11,14 +11,30 @@ class UserSeeder extends Seeder
     /**
      * Run the database seeds.
      */
+
+
     public function run(): void
     {
-        User::factory()->create([
-            'name' => 'lila Ahmed',
-            'email' => 'lila@example.com',
-            'password' => bcrypt('password123'),
-            "password_confirmation": "password123",
+        $users = [
+            [
+                'name' => 'Lila Ahmed',
+                'email' => 'lila123@example.com',
+                'password' => bcrypt('password123'),
+            ],
+            [
+                'name' => 'Sara Ali',
+                'email' => 'sara@example.com',
+                'password' => bcrypt('password456'),
+            ],
+            [
+                'name' => 'Omar Nasser',
+                'email' => 'omar@example.com',
+                'password' => bcrypt('password789'),
+            ],
+        ];
 
-        ]);
+        foreach ($users as $userData) {
+            User::factory()->create($userData);
+        }
     }
 }
