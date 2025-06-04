@@ -32,6 +32,14 @@ class TaskController extends Controller
             $query->orderBy($sortBy);
         }
 
+
+        if ($request->has('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('title', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('description', 'like', '%' . $searchTerm . '%');
+            });
+        }
         $tasks = $query->get();
         return response()->json(['tasks' => $tasks]);
     }

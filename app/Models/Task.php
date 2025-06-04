@@ -36,4 +36,13 @@ class Task extends Model
     {
         return $this->belongsToMany(User::class);
     }
+
+
+    public static function searchTasks(string $query)
+    {
+        return self::whereRaw(
+            "MATCH(title, description) AGAINST(? IN NATURAL LANGUAGE MODE)",
+            [$query]
+        )->get();
+    }
 }
