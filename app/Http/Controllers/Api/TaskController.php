@@ -52,19 +52,13 @@ class TaskController extends Controller
     public function store(TaskRequest $request)
     {
 
-        // die($request->status);
-        $statusEnum = TaskStatus::fromUserInput($request->status);
-
-        $priorityEnum = $request->priority
-            ? TaskPriority::from($request->priority)
-            : TaskPriority::Medium;
 
         $task = Task::create([
             'title' => $request->title,
             'description' => $request->description,
             'due_date' => $request->due_date,
-            'status' => $statusEnum->value,
-            'priority' => $priorityEnum->value,
+            'status' => $request->status ?? TaskStatus::Pending->value,
+            'priority' => $request->priority ?? TaskPriority::Medium->value,
         ]);
 
         // Attach the authenticated user to the task
