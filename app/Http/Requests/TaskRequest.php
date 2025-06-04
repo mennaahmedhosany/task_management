@@ -24,14 +24,7 @@ class TaskRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
 
-    protected function prepareForValidation(): void
-    {
-        if ($this->has('status')) {
-            $this->merge([
-                'status' => strtolower($this->input('status')),
-            ]);
-        }
-    }
+
 
     public function rules(): array
     {

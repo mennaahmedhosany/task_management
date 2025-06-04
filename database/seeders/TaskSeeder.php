@@ -19,21 +19,21 @@ class TaskSeeder extends Seeder
                 'title' => 'Complete project proposal',
                 'description' => 'Draft and finalize the project proposal document for the new client.',
                 'due_date' => '2025-06-10',
-                'status' => 'pending',
+                'status' => 'Pending',
                 'priority' => 'High',
             ],
             [
                 'title' => 'Review design mockups',
                 'description' => 'Check the UI/UX team’s wireframes and provide feedback.',
                 'due_date' => '2025-06-12',
-                'status' => 'inprogress',
+                'status' => 'InProgress',
                 'priority' => 'Medium',
             ],
             [
                 'title' => 'Team meeting',
                 'description' => null, // testing nullable description
                 'due_date' => '2025-06-15',
-                'status' => 'completed',
+                'status' => 'Completed',
                 'priority' => 'Low',
             ],
         ];

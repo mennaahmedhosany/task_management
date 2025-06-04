@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('description');
             $table->date('due_date');
-            $table->enum('status', ['pending', 'inprogress', 'completed', 'overdue'])->default('pending');
+            $table->enum('status', ['Pending', 'InProgress', 'Completed', 'Overdue'])->default('Pending');
             $table->integer('priority')->default(0);
             $table->softDeletes();
             $table->timestamps();

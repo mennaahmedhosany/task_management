@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
 use App\TaskPriority;
 use Illuminate\Validation\Rules\Enum;
@@ -81,29 +82,14 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateTaskRequest $request, string $id)
     {
-
-        $request->merge([
-            'status' => strtolower($request->status),
-        ]);
-
-        $request->validate([
-            'status' => ['required', new Enum(TaskStatus::class)],
-        ]);
-
-
         // Find the task or fail
         $task = Task::findOrFail($id);
 
-        // Convert the incoming status string to enum instance
-        $newStatus = TaskStatus::from($request->status);
-
-        // Check your business rule using enum comparisons
-
         if (
-            $newStatus->value === TaskStatus::Completed->value &&
-            $task->status !== TaskStatus::InProgress->value
+            $request->status === TaskStatus::Completed->value &&
+            $task->status->value !== TaskStatus::InProgress->value
         ) {
             return response()->json([
                 'message' => 'Task must be In Progress before it can be marked Completed.'
@@ -112,7 +98,7 @@ class TaskController extends Controller
 
         // Update using enum value (string)
         $task->update([
-            'status' => $newStatus->value,
+            'status' => $request->status,
         ]);
 
         return response()->json([
