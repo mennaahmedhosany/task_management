@@ -1,62 +1,171 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
-
-## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 # task_management
+
+This is a Task Management API built with Laravel, designed to help users manage their tasks effectively with features like status updates, prioritization, soft deletion, full-text search, and automated email notifications.
+
+# Authentication Endpoints
+
+🔐 Register User
+Method: POST
+
+Endpoint: /api/register
+     
+📥 Request Parameters :
+      username (string): name. 
+      email (string): User's email address.
+      password (string): User's password.  
+
+🔐 Login User
+Method: POST
+
+Endpoint: /api/Login
+     
+📥 Request Parameters :
+      name (string): name. 
+      password (string): User's password.  
+
+🔐 Logout User
+Method: POST
+
+Endpoint: /api/Logout
+     
+📥 Request Parameters :
+    null
+
+
+# Basic Features Endpoints:
+
+Create Task
+
+Method: POST
+
+Endpoint: /api/tasks
+
+Authentication: ✅ Required — Bearer Token (Passport)
+
+📥 Request Parameters :
+        title (string): Task title.
+        description (string): Task description.
+        dueDate (date): Task due date. Must be a valid future date.
+        priority (enum): Task priority (Low,  Medium, High). (Optional, default = Medium)
+
+
+Update Task
+
+Method: put
+
+Endpoint: /api/tasks
+
+Authentication: ✅ Required — Bearer Token (Passport)
+
+📥 Request Parameters :
+        id: int
+        status (enum): Task status ( pending,inpregress,completed,overdue). (required, default = pending)
+
+
+Task Deletion
+
+ Method: post 
+
+ Endpoint: /api/tasks
+
+Authentication: ✅ Required — Bearer Token (Passport)
+
+📥 Request Parameters :
+          id: int
+
+
+Task Listing:     
+       
+   Method: get
+
+   Endpoint: /api/tasks
+
+Authentication: ✅ Required — Bearer Token (Passport)
+
+ 📥 Request Parameters :
+
+        status (enum): Filter by task status (pending, inprogress, completed, overdue). (Optional)
+        from_due (date): Start date for due date range filter. (Optional)
+        to_due (date): End date for due date range filter. (Optional)
+        sort_by (string): Sort tasks by one of the following: priority, due_date, or created_at. (Optional; default = created_at)
+        search (string): Keyword to search in task title or description. (Optional)
+
+
+# Advanced Features:
+
+This feature automatically notifies users via email 24 hours before a task's due date.
+
+            📦 How It Works:
+
+            The system uses Laravel’s queue system to send email notifications in the background.
+
+            A custom Artisan command runs every hour to check for tasks that are due in the next 24 hours.
+
+            If any are found, notification emails are queued for delivery.
+
+            Setup Instructions:
+
+            Queue Configuration:
+            Ensure the queue system is set up (e.g., using database, redis, etc.)
+
+            php artisan queue:work
+            Schedule the Command:
+            In App\Console\Kernel.php, schedule the custom command to run hourly:
+
+            php
+
+            protected function schedule(Schedule $schedule)
+            {
+                $schedule->command('tasks:notify')->hourly();
+            }
+            Create the Command:
+            A custom command like this should exist:
+
+            php artisan make:command NotifyUpcomingTasks
+
+            Email Template:
+            Customize the Mailable class and view file used for the task notification.
+
+            📧 Notification Trigger:
+
+            When the command runs, it finds tasks with due_date = now() + 1 day and sends notifications to their assigned users.
+
+            ✅ Requirements:
+
+            Valid email addresses for all users.
+
+            Queue worker running in the background.
+
+
+Task Search:     
+       
+   Method: get
+
+   Endpoint: /api/tasks
+
+Authentication: ✅ Required — Bearer Token (Passport)
+
+ 📥 Request Parameters :
+
+        search (string): Keyword to search in task title or description. (Optional)
+
+
+
+Task Prioritization:     
+       
+   Method: get
+
+   Endpoint: /api/tasks
+
+Authentication: ✅ Required — Bearer Token (Passport)
+
+ 📥 Request Parameters :
+
+        sort_by (string): Sort tasks by one of the following: priority, due_date, or created_at. (Optional; default = created_at)
+        
+
+

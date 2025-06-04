@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskRequest;
 use App\Models\Task;
+use App\TaskPriority;
 use Illuminate\Validation\Rules\Enum;
 use App\TaskStatus;
+
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -53,11 +55,16 @@ class TaskController extends Controller
         // die($request->status);
         $statusEnum = TaskStatus::fromUserInput($request->status);
 
+        $priorityEnum = $request->priority
+            ? TaskPriority::from($request->priority)
+            : TaskPriority::Medium;
+
         $task = Task::create([
             'title' => $request->title,
             'description' => $request->description,
             'due_date' => $request->due_date,
             'status' => $statusEnum->value,
+            'priority' => $priorityEnum->value,
         ]);
 
         // Attach the authenticated user to the task

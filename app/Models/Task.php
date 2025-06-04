@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Testing\Fluent\Concerns\Has;
+use App\Enums\TaskPriority;
+
 
 class Task extends Model
 {
@@ -27,8 +29,9 @@ class Task extends Model
 
     protected $casts = [
         'status' => TaskStatus::class,
-    ];
+        'priority' => TaskPriority::class,
 
+    ];
 
 
     //belongs to user
