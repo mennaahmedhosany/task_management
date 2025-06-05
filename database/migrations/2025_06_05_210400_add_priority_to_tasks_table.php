@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tasks', function (Blueprint $table) {
-            $table->enum('status', ['Pending', 'InProgress', 'Completed', 'Overdue'])->default('Pending')->change();
+            $table->enum('priority', ['Low', 'Medium', 'High'])->default('Medium')->after('status');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('tasks', function (Blueprint $table) {
-            $table->enum('status', ['pending', 'inprogress', 'completed', 'overdue'])->default('pending')->change();
+            $table->dropColumn('priority');
         });
     }
 };

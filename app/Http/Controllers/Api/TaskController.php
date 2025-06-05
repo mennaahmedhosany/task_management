@@ -29,8 +29,9 @@ class TaskController extends Controller
             $query->whereBetween('due_date', [$request->from_due, $request->to_due]);
         }
 
-        if ($request->filled('priority')) {
-            $query->orderByRaw("FIELD(priority, 'High', 'Medium', 'Low') DESC");
+        if ($request->has('priority')) {
+
+            $query->orderByRaw("FIELD(priority, 'High', 'Medium', 'Low') ");
         }
 
         if ($request->has('due_date')) {

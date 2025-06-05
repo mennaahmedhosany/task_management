@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description');
-            $table->date('due_date');
+            $table->text('description')->nullable();
             $table->enum('status', ['Pending', 'InProgress', 'Completed', 'Overdue'])->default('Pending');
-            $table->integer('priority')->default(0);
+            $table->date('due_date');
             $table->softDeletes();
             $table->timestamps();
         });
