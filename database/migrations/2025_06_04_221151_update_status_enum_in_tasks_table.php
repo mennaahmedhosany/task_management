@@ -21,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        $table->enum('status', ['pending', 'inprogress', 'completed', 'overdue'])->default('pending')->change();
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->enum('status', ['pending', 'inprogress', 'completed', 'overdue'])->default('pending')->change();
+        });
     }
 };

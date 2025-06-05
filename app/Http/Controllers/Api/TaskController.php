@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TaskListingRequest;
 use App\Http\Requests\TaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
@@ -17,10 +18,9 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(TaskListingRequest $request)
     {
         $query = Task::query();
-
         if ($request->has('status')) {
             $query->where('status', $request->status);
         }
@@ -29,13 +29,16 @@ class TaskController extends Controller
             $query->whereBetween('due_date', [$request->from_due, $request->to_due]);
         }
 
-        if ($request->has('sort_by')) {
-            $sortOptions = ['priority', 'due_date', 'created_at'];
-            $sortBy = in_array($request->sort_by, $sortOptions) ? $request->sort_by : 'created_at';
-            $query->orderBy($sortBy);
+        if ($request->filled('priority')) {
+            $query->orderByRaw("FIELD(priority, 'High', 'Medium', 'Low') DESC");
         }
 
-
+        if ($request->has('due_date')) {
+            $query->orderby('due_date', $request->due_date);
+        }
+        if ($request->has('created_at')) {
+            $query->orderby('created_at', $request->created_at);
+        }
         if ($request->has('search')) {
             $searchTerm = $request->search;
             $query->where(function ($q) use ($searchTerm) {
@@ -43,8 +46,11 @@ class TaskController extends Controller
                     ->orWhere('description', 'like', '%' . $searchTerm . '%');
             });
         }
-        $tasks = $query->get();
-        return response()->json(['tasks' => $tasks]);
+
+        $perPage = $request->input('per_page', 15);
+        $tasks = $query->paginate($perPage);
+
+        return response()->json($tasks);
     }
 
     /**
