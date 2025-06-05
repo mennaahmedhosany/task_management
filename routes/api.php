@@ -15,6 +15,11 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::apiResource('tasks', TaskController::class)
-    ->middleware('auth:sanctum')
-    ->only(['index', 'store', 'update', 'destroy']);
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/tasks', [TaskController::class, 'store'])
+        ->middleware('throttle:5,1');
+
+    Route::apiResource('tasks', TaskController::class)
+        ->only(['index', 'update', 'destroy']);
+});

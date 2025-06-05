@@ -176,3 +176,18 @@ bash
 http://127.0.0.1:8000/api/documentation#/Tasks/be68905d866e856db6c738172b8d929a
 
 
+# Rate Limiting Middleware
+
+To prevent abuse, the `POST /api/tasks` route is protected by a custom rate limiter.
+
+# Configuration
+
+Defined in a custom `ServiceProvider`:
+
+```php
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
+
+RateLimiter::for('task-creation', function ($request) {
+    return Limit::perMinute(5)->by(optional($request->user())->id ?: $request->ip());
+});
