@@ -167,5 +167,12 @@ Authentication: ✅ Required — Bearer Token (Passport)
 
         sort_by (string): Sort tasks by one of the following: priority, due_date, or created_at. (Optional; default = created_at)
         
+# API Documentation :
+
+his API allows you to manage tasks with features including filtering, sorting, pagination, and CRUD operations.
+
+bash
+
+http://127.0.0.1:8000/api/documentation#/Tasks/be68905d866e856db6c738172b8d929a
 
 
