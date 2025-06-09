@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\TaskPriority;
 use App\TaskStatus;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -47,5 +48,15 @@ class Task extends Model
             "MATCH(title, description) AGAINST(? IN NATURAL LANGUAGE MODE)",
             [$query]
         )->get();
+    }
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
+
+    public function getUpdatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d');
     }
 }

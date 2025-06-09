@@ -191,6 +191,3 @@ use Illuminate\Support\Facades\RateLimiter;
 RateLimiter::for('task-creation', function ($request) {
     return Limit::perMinute(5)->by(optional($request->user())->id ?: $request->ip());
 });
-
-# Laravel API Resources  :
-  this project uses Laravel API Resources to provide a clean and consistent JSON response for the Task update endpoint.

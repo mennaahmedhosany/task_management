@@ -12,42 +12,25 @@ use App\Http\Resources\UpdateTaskResource;
 use App\Models\Task;
 use App\TaskPriority;
 use App\TaskStatus;
-
-
+use App\Traits\Filterable;
+use App\Traits\Sortable;
 
 class TaskController extends Controller
 {
 
 
+    use  Filterable, Sortable;
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index(TaskListingRequest $request)
     {
         $query = Task::query();
-        if ($request->has('status')) {
-            $query->where('status', $request->status);
-        }
 
-        if ($request->has(['from_due', 'to_due'])) {
-            $query->whereBetween('due_date', [$request->from_due, $request->to_due]);
-        }
-
-        if ($request->has('priority')) {
-
-            $query->orderByRaw("FIELD(priority, 'High', 'Medium', 'Low') ");
-        }
-
-        if ($request->has('due_date')) {
-            $query->orderby('due_date', 'asc');
-        }
-        if ($request->has('created_at')) {
-            $query->orderby('created_at', 'asc');
-        }
-        if ($request->has('search')) {
-            $searchTerm = $request->search;
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('title', 'like', '%' . $searchTerm . '%')
-                    ->orWhere('description', 'like', '%' . $searchTerm . '%');
-            });
-        }
+        $query = $this->applyFilters($request, $query);
+        $query = $this->applySorting($request, $query);
 
         $perPage = $request->input('per_page', 15);
         $tasks = $query->paginate($perPage);
