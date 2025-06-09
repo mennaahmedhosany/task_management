@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\TaskPriority;
+use App\Enums\TaskStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskListingRequest;
 use App\Http\Requests\TaskRequest;
@@ -10,8 +12,7 @@ use App\Http\Resources\StoreTaskResource;
 use App\Http\Resources\TaskResource;
 use App\Http\Resources\UpdateTaskResource;
 use App\Models\Task;
-use App\TaskPriority;
-use App\TaskStatus;
+
 use App\Traits\Filterable;
 use App\Traits\Sortable;
 
